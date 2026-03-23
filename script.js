@@ -1,13 +1,10 @@
 //You can edit ALL of the code here
 function setup() {
-  const allEpisodes = getAllEpisodes();//вызвали функцию из episodes.js и сохранили полученный массив из 73 объектов в переменную allEpisodes
+  const allEpisodes = getAllEpisodes();//здесь массив из 73 объектов
   makePageForEpisodes(allEpisodes); //передали массив allEpisodes дальше
 }
 
 //эта функция собирает детали для будущей карточки. например: деталь-картинка; деталь-название;деталь-описание итд
-//parentElement это карточка и туда мы отправим деталь
-// tagName - какого рода будет эта деталь; напрмер: <p>,<img>,<h3> итд
-// textContent - наполнение детали; текст или картинка
 function createChildElement(parentElement, tagName, textContent) {
   const element = document.createElement(tagName); //создали тэг, например <p>;дальше все сюда вложим
   element.textContent = textContent; //положили в этот тэг (<p>) текст связали с element
