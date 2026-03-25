@@ -1,21 +1,23 @@
 //You can edit ALL of the code here
 function setup() {
-  const allEpisodes = getAllEpisodes();//здесь массив из 73 объектов
-  makePageForEpisodes(allEpisodes); //передали массив allEpisodes дальше
+  const allEpisodes = getAllEpisodes();//an array of objects (73 episodes)
+  makePageForEpisodes(allEpisodes); //passed the allEpisodes array further
 }
 
-//эта функция собирает детали для будущей карточки. например: деталь-картинка; деталь-название;деталь-описание итд
+//this function collects details for the future card. for example: detail-image; detail-name; detail-description and so on
 function createChildElement(parentElement, tagName, textContent) {
-  const element = document.createElement(tagName); //создали тэг, например <p>;дальше все сюда вложим
-  element.textContent = textContent; //положили в этот тэг (<p>) текст связали с element
-  parentElement.append(element);// добавили element внутрь родителя
-  return element; //и вернули его
+  const element = document.createElement(tagName); //created a tag, for example <p>; then we will put everything here
+  element.textContent = textContent; //put textContent inside the element, for example: <p>textContent</p>
+  parentElement.append(element);//put the element inside the parentElement, for example: <section><p>textContent</p></section>
+  return element; //and returned it
 }
 
-//эта функция собирает готовую карточку
+//this function collects the ready card
 function createCard({image, name, season, number, summary}) {
-  const card = document.createElement("section"); //это контейнер карточки, ее мы и вернем из этой функции
-  createChildElement(card, "img", image.medium);
+  const card = document.createElement("card"); //this is the card container, we will return it from this function
+  const img = document.createElement("img");
+  img.src = image.medium;
+  card.append(img);
   createChildElement(card, "h3", name);
   createChildElement(card, "p", `S${(season).toString().padStart(2, "0")}E${(number).toString().padStart(2, "0")}`);
   createChildElement(card, "p", `Summary: ${summary.slice(3, summary.length - 4)}`);
@@ -23,12 +25,14 @@ function createCard({image, name, season, number, summary}) {
 }
 
 
-function makePageForEpisodes(episodeList) { //в эту функцию в самом начале мы передали переменную allEpisodes которая содержит в себе массив из множества объектов
-  const rootElem = document.getElementById("root"); //нашли <div id="root"> в HTML куда будем аппэндить созданные карточки
+function makePageForEpisodes(episodeList) { //At the very beginning, we passed the variable allEpisodes to this function, which contains an array of objects 
+  const rootElem = document.getElementById("root"); //Located <div id="root"> in the HTML where we will append the created cards
   for (const episode of episodeList) { 
-    //вызов функции по созданию карточки и помещение карточки в конец тэга root
+    //calling the function to create a card and appending the card to the end of the root tag
     rootElem.append(createCard(episode));
   }
 }
 
 window.onload = setup;
+
+//p.s. Apologies if my comments are perhaps a bit too detailed. I need them for the time being. 
