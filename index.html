@@ -9,13 +9,18 @@
   </head>
 
   <body>
+    <input type="text" id="searchField" placeholder="Search for an episode..." />
+    <p id="episodeCounter"></p>
+    <select id="selectField">
+      <option value="default">Select an episode</option>
+    </select>
     <div id="root">
     </div>
-
     <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
     <script src="episodes.js"></script>
 
     <!-- Loads YOUR javascript code -->
     <script src="script.js"></script>
+    <footer><a href="https://tvmaze.com/" target="_blank">TVMaze</a></footer>
   </body>
 </html>
