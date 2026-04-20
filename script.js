@@ -1,5 +1,5 @@
 // === ДАННЫЕ ===  // === DATA ===
-const allEpisodes = getAllEpisodes();
+let allEpisodes = [];
 
 // === DOM-ЭЛЕМЕНТЫ === // === DOM ELEMENTS ===
 const rootElem = document.getElementById("root");
@@ -10,15 +10,24 @@ const selectField = document.getElementById("selectField");
 // === ТОЧКА ВХОДА === // === ENTRY POINT ===
 // Вызывается когда страница загружена // Called when the page is loaded
 // Инициализирует страницу и все обработчики событий // Initializes the page and all event listeners
-function setup() {
-  makePageForEpisodes(allEpisodes);
-  searchField.addEventListener("input", filterEpisodes);
-  episodeCounter.innerHTML = `Showed ${allEpisodes.length} of ${allEpisodes.length} episodes`;
-  fillSelector();
-  selectField.addEventListener("change", () => {
-    const cardById = document.getElementById(selectField.value);
-    cardById.scrollIntoView();
-  });
+async function setup() {
+  try {
+    rootElem.textContent = "loading...";
+    const response = await fetch("https://api.tvmaze.com/shows/82/episodes");
+    const data = await response.json();
+    allEpisodes = data;
+    makePageForEpisodes(allEpisodes);
+
+    searchField.addEventListener("input", filterEpisodes);
+    episodeCounter.innerHTML = `Showed ${allEpisodes.length} of ${allEpisodes.length} episodes`;
+    fillSelector();
+    selectField.addEventListener("change", () => {
+      const cardById = document.getElementById(selectField.value);
+      cardById.scrollIntoView();
+    });
+  } catch (error) {
+    rootElem.textContent = "...something went wrong";
+  }
 }
 
 // === ФИЛЬТРАЦИЯ === // === FILTERING ===
