@@ -1,34 +1,41 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      TV Show Project | Elisabeth Matulian (GitHub: Elisabeth-Matulian)
+    </title>
+    <link href="style.css" rel="stylesheet" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TV Show Project | Elisabeth Matulian (GitHub: Elisabeth-Matulian)</title>
-  <link href="style.css" rel="stylesheet" />
-  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-</head>
+  <body>
+    <div class="searchBar">
+      <select id="selectedShow" value="select a show">
+        <option>select a show</option>
+      </select>
+    </div>
 
-<body>
+    <div class="searchBar">
+      <label for="search">Search</label>
+      <input type="search" id="search" />
+      <p id="episodeCountFromSearch"></p>
+    </div>
 
-  <div class="searchBar">
-    <label for="search">Search</label>
-    <input type="search" id="search">
-    <p id="episodeCountFromSearch"></p>
-  </div>
+    <div class="searchBar">
+      <select id="selectedEpisode" value="select an episode">
+        <option>select an episode</option>
+      </select>
+    </div>
 
-  <select id="selectedEpisode" value="select an episode">
-    <option>select an episode</option>
-  </select>
-  <div id="root">
-  </div>
+    <div id="root"></div>
 
+    <!-- Loads YOUR javascript code -->
+    <script src="script.js" type="module"></script>
 
-  <!-- Loads YOUR javascript code -->
-  <script src="script.js"></script>
-  <footer>
-    <a href="https://tvmaze.com/" target="_blank">TV Maze</a>
-  </footer>
-</body>
-
+    <footer>
+      <a href="https://tvmaze.com/" target="_blank">TV Maze</a>
+    </footer>
+  </body>
 </html>

@@ -1,29 +1,50 @@
 //You can edit ALL of the code here
 // adds veriadles needed in the global scope
+const allShows = [];
 let allEpisodes = [];
 let episodeCountFromSearch = document.getElementById("episodeCountFromSearch");
-const rootElem = document.getElementById("root"); 
+const rootElem = document.getElementById("root");
+let id = 1; // default show ID, can be changed by the user through the dropdown menu
+rootElem.textContent = "Loading...";
 
-function setup() {
-  rootElem.textContent = "Loading..."
-  const loadData = async () => {
-  const url = "https://api.tvmaze.com/shows/82/episodes";
+const loadData = async (showID) => {
+  const url = `https://api.tvmaze.com/shows/${showID}/episodes`;
   const response = await fetch(url);
-  return await response.json()
-  }
-  loadData().then((episodes) => { 
-    allEpisodes = episodes;
-    makePageForEpisodes(allEpisodes);
-    episodeCountFromSearch.innerHTML = `${allEpisodes.length} Episodes`; //adds the message for the search result
-    selectEpisodes();
-    selectedEpisodeFiltered();
-    return allEpisodes; //passed the allEpisodes array further
-  })
-  .catch((error) => {
-    rootElem.textContent = "...something went wrong";
-  }) 
-}
+  return await response.json();
+};
 
+async function getAllShows() {
+  try {
+    const response = await fetch("https://api.tvmaze.com/shows");
+
+    const data = await response.json();
+
+    for (const show of data) {
+      allShows.push(show);
+      allShows.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    selectShow();
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+}
+function setup() {
+  getAllShows();
+  selectShowRender();
+  loadData(id)
+    .then((episodes) => {
+      allEpisodes = episodes;
+      makePageForEpisodes(allEpisodes);
+      episodeCountFromSearch.innerHTML = `${allEpisodes.length} Episodes`; //adds the message for the search result
+      selectShow();
+      selectEpisodes();
+      selectedEpisodeFiltered();
+      return allEpisodes; //passed the allEpisodes array further
+    })
+    .catch((error) => {
+      rootElem.textContent = "...something went wrong";
+    });
+}
 
 // gets the data from the serch bar and updates live
 function searchBarSetUp() {
@@ -52,7 +73,7 @@ function searchBarSetUp() {
 //this function collects details for the future card. for example: detail-image; detail-name; detail-description and so on
 function createChildElement(parentElement, tagName, textContent) {
   const element = document.createElement(tagName);
-  element.textContent = textContent; 
+  element.textContent = textContent;
   parentElement.append(element);
   return element;
 }
@@ -79,7 +100,7 @@ function createCard({ image, name, season, number, summary }) {
 
 function selectEpisodes() {
   let selectedEpisode = document.getElementById("selectedEpisode");
-
+  selectedEpisode.innerHTML = ""; // Clear existing options
   // add "All Episodes" option
   let allOption = document.createElement("option");
   allOption.text = "All Episodes";
@@ -131,6 +152,33 @@ function makePageForEpisodes(episodeList) {
     rootElem.append(createCard(episode));
   }
 }
+
+function selectShow() {
+  let selectedShow = document.getElementById("selectedShow");
+  selectedShow.innerHTML = ""; // Clear existing options
+  for (const shows of allShows) {
+    const { name, id } = shows;
+
+    let showAdd = document.createElement("option");
+    showAdd.text = `${name}`;
+    showAdd.value = id;
+    selectedShow.add(showAdd);
+  }
+}
+
+function selectShowRender() {
+  const selectedShow = document.getElementById("selectedShow");
+  selectedShow.addEventListener("change", () => {
+    id = selectedShow.value;
+    loadData(id).then((episodes) => {
+      allEpisodes = episodes;
+      makePageForEpisodes(allEpisodes);
+      episodeCountFromSearch.innerHTML = `${allEpisodes.length} Episodes`;
+      selectEpisodes();
+    });
+  });
+}
+
 window.onload = setup;
 
 //p.s. Apologies if my comments are perhaps a bit too detailed. I need them for the time being.
