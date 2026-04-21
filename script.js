@@ -1,30 +1,48 @@
 // === ДАННЫЕ ===  // === DATA ===
+let allShows = [];
 let allEpisodes = [];
+let episodesCache = {};
 
 // === DOM-ЭЛЕМЕНТЫ === // === DOM ELEMENTS ===
 const rootElem = document.getElementById("root");
 const searchField = document.getElementById("searchField");
 const episodeCounter = document.getElementById("episodeCounter");
-const selectField = document.getElementById("selectField");
+const selectShow = document.getElementById("selectShow");
+const selectEpisode = document.getElementById("selectEpisode");
 
 // === ТОЧКА ВХОДА === // === ENTRY POINT ===
 // Вызывается когда страница загружена // Called when the page is loaded
 // Инициализирует страницу и все обработчики событий // Initializes the page and all event listeners
-async function setup() {
-  try {
-    rootElem.textContent = "loading...";
-    const response = await fetch("https://api.tvmaze.com/shows/82/episodes");
-    const data = await response.json();
-    allEpisodes = data;
-    makePageForEpisodes(allEpisodes);
+function setup() {
+  fillShowSelector();
+  selectShow.addEventListener("change", () => {
+    loadEpisodes(selectShow.value)
+  });
 
-    searchField.addEventListener("input", filterEpisodes);
-    episodeCounter.innerHTML = `Showed ${allEpisodes.length} of ${allEpisodes.length} episodes`;
-    fillSelector();
-    selectField.addEventListener("change", () => {
-      const cardById = document.getElementById(selectField.value);
-      cardById.scrollIntoView();
-    });
+  searchField.addEventListener("input", filterEpisodes);
+
+  selectEpisode.addEventListener("change", () => {
+    const cardById = document.getElementById(selectEpisode.value);
+    cardById.scrollIntoView();
+  });
+}
+
+// === ФЕТЧ ЭПИЗОДОВ === // === FETCH EPISODES ===
+async function loadEpisodes(showId) {
+  try {
+    if (!episodesCache[showId]) {
+      rootElem.textContent = "loading...";
+      const response = await fetch(
+        `https://api.tvmaze.com/shows/${showId}/episodes`,
+      );
+      const data = await response.json();
+      allEpisodes = data;
+      episodesCache[showId] = data;
+    }
+      allEpisodes = episodesCache[showId]
+      makePageForEpisodes(allEpisodes);
+      fillEpisodeSelector()
+      episodeCounter.innerHTML = `Showed ${allEpisodes.length} of ${allEpisodes.length} episodes`;
   } catch (error) {
     rootElem.textContent = "...something went wrong";
   }
@@ -76,14 +94,35 @@ function makeEpisodeCard({ id, name, season, number, image, summary }) {
 
 window.onload = setup;
 
-// === ЗАПОЛНЕНИЕ СЕЛЕКТОРА === // === FILLING THE SELECTOR ===
+// === ЗАПОЛНЕНИЕ ЭПИЗОД СЕЛЕКТОРА === // === FILLING THE EPISODE SELECTOR ===
 // Заполняет выпадающий список всеми эпизодами в формате S01E01 - Name
 // Populates the dropdown with all episodes in format S01E01 - Name
-function fillSelector() {
+function fillEpisodeSelector() {
+  selectEpisode.innerHTML = "<option value='default'>Select an episode</option>"; 
   for (const episode of allEpisodes) {
     const option = document.createElement("option");
     option.value = episode.id;
     option.textContent = `${formatEpisodeCode(episode.season, episode.number)} - ${episode.name}`;
-    selectField.append(option);
+    selectEpisode.append(option);
   }
 }
+
+// === ЗАПОЛНЕНИЕ ШОУ СЕЛЕКТОРА === // === FILLING THE SHOW SELECTOR ===
+async function fillShowSelector() {
+  try {
+    const response = await fetch("https://api.tvmaze.com/shows");
+    const data = await response.json();
+    allShows = data.sort((a, b) =>
+    a.name.toLowerCase().localeCompare(b.name.toLowerCase()),
+  );
+  for (const show of allShows) {
+    const option = document.createElement("option");
+    option.value = show.id;
+    option.textContent = show.name;
+    selectShow.append(option);
+  }
+  } catch (error) {
+    rootElem.textContent = "...something went wrong";
+  }
+}
+  
