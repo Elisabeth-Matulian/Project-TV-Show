@@ -3,13 +3,15 @@
   flex-wrap: wrap;
 }
 
-card {
-  width: 250px;
+.showCard, .episodeCard {
+  width: 300px;
   border-style: solid;
   border-color: #000000;
   border-radius: 1%;
   margin: 10px;
   padding: 10px;
+  height: 500px;
+  overflow: auto;
 }
 
 
