@@ -43,6 +43,7 @@ function getShowEpisodes(id) {
   if (episodeCache[id]) {
     allEpisodes = episodeCache[id];
     renderEpisodes(allEpisodes);
+    pageView = "episodes";
     selectEpisodes();
   } else {
     fetchEpisodes(id).then((episodes) => {
@@ -175,6 +176,7 @@ function handleShowSelection() {
       allEpisodes = episodeCache[id];
       renderEpisodes(allEpisodes);
       episodeCounter.innerHTML = `${allEpisodes.length} Episodes`;
+      pageView = "episodes";
       selectEpisodes();
     } else {
       fetchEpisodes(id).then((episodes) => {
@@ -182,6 +184,7 @@ function handleShowSelection() {
         allEpisodes = episodes;
         renderEpisodes(allEpisodes);
         episodeCounter.innerHTML = `${allEpisodes.length} Episodes`;
+        pageView = "episodes";
         selectEpisodes();
       });
     }
@@ -221,6 +224,7 @@ function handleSearch() {
           genres.some((genre) => genre.toLowerCase().includes(searchTerm)),
       );
       renderShows(filtered);
+      episodeCounter.innerHTML = `${filtered.length} shows found`;
     } else {
       const filtered = allEpisodes.filter(
         ({ name, summary }) =>
@@ -228,10 +232,9 @@ function handleSearch() {
           summary.toLowerCase().includes(searchTerm),
       );
       renderEpisodes(filtered);
-      episodeCounter.innerHTML =
-        filtered.length > 0
-          ? `${filtered.length} Episodes`
-          : `No episodes found`;
+      episodeCounter.innerHTML = filtered.length > 0
+        ? `${filtered.length} Episodes`
+        : `No episodes found`;
     }
   });
 }
