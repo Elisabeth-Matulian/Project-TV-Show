@@ -4,7 +4,7 @@ let allEpisodes = [];
 let episodesCache = {};
 
 // === DOM-ЭЛЕМЕНТЫ === // === DOM ELEMENTS ===
-const rootElem = document.getElementById("root");
+const episodesRoot = document.getElementById("episodesRoot");
 const searchShowField = document.getElementById("searchShowField")
 const searchEpisodeField = document.getElementById("searchEpisodeField");
 const episodeCounter = document.getElementById("episodeCounter");
@@ -44,7 +44,7 @@ function setup() {
 async function loadEpisodes(showId) {
   try {
     if (!episodesCache[showId]) { //если такого эпизода нет в кеше, то делаем запрос на сервер
-      rootElem.textContent = "loading...";
+      episodesRoot.textContent = "loading...";
       const response = await fetch(
         `https://api.tvmaze.com/shows/${showId}/episodes`,
       );
@@ -56,7 +56,7 @@ async function loadEpisodes(showId) {
       fillEpisodeSelector();
       episodeCounter.innerHTML = `Showed ${allEpisodes.length} of ${allEpisodes.length} episodes`;
   } catch (error) {
-    rootElem.textContent = "...something went wrong";
+    episodesRoot.textContent = "...something went wrong";
   }
 }
 
@@ -100,9 +100,9 @@ function makePageForShows(showList) {
 
 // === РЕНДЕР СПИСКА ЭПИЗОДОВ === // === RENDERING EPISODE LIST ===
 function makePageForEpisodes(episodeList) {
-  rootElem.innerHTML = ""; //очищаем html от предыдущих карточек
+  episodesRoot.innerHTML = ""; //очищаем html от предыдущих карточек
   for (const episode of episodeList) {
-    rootElem.append(makeEpisodeCard(episode)); //отправляем итерируемый эпизод и возвращаем карточку, которую вставляем в html
+    episodesRoot.append(makeEpisodeCard(episode)); //отправляем итерируемый эпизод и возвращаем карточку, которую вставляем в html
   }
 }
 
@@ -170,7 +170,7 @@ async function fillShowSelector() {
     selectShow.append(option);
   }
   } catch (error) {
-    rootElem.textContent = "...something went wrong";
+    showsRoot.textContent = "...something went wrong";
   }
   console.log(allShows[0]);
 }

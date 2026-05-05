@@ -2,3 +2,15 @@
 #episodesView {
     display: none;
 }
+
+#showsRoot, #episodesRoot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* showsRoot > div означает: все <div> которые являются прямыми(1 уровень вложенности) дочерними элементами #showsRoot. 
+Без > запись #showsRoot div нашла бы все div внутри showsRoot на любом уровне вложенности — включая div внутри карточек.*/
+#showsRoot > div, #episodesRoot > div { 
+    width: 300px;
+}
